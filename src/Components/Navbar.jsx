@@ -6,7 +6,7 @@ const Navbar = () => {
     <div>
       <div className="navbar bg-base-100 shadow-sm">
         <div className="navbar-start">
-          <Link to="/" className="text-xl">
+          <Link to="/" className="text-3xl font-bold">
             Home Decor
           </Link>
         </div>
