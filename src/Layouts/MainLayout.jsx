@@ -5,9 +5,11 @@ import { Outlet } from 'react-router';
 
 const MainLayout = () => {
     return (
-      <div>
+      <div className="flex flex-col">
         <Navbar />
-        <Outlet />
+        <div className='flex-1 min-h-screen'>
+          <Outlet />
+        </div>
         <Footer />
       </div>
     );
