@@ -44,7 +44,6 @@ const ProductDetails = () => {
 
   const handleAddToWishList = () => {
     const existingWishList = JSON.parse(localStorage.getItem("wishList"));
-    console.log(existingWishList);
     let updatedWishList = [];
     if (existingWishList) {
       const isDuplicate = existingWishList.some((p) => p.id === product.id);
