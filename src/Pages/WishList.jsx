@@ -1,5 +1,16 @@
 import { Heart, Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Rectangle,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 const WishList = () => {
   const [wishListState, setWishListState] = useState([]);
@@ -30,9 +41,22 @@ const WishList = () => {
     localStorage.setItem("wishList", JSON.stringify(updatedWishList));
   };
 
+  // generate chart data
+  const totalsByCategory = {};
+  wishListState.forEach((product) => {
+    const category = product.category;
+    totalsByCategory[category] =
+      (totalsByCategory[category] || 0) + product.price;
+  });
+
+  const chartData = Object.keys(totalsByCategory).map((category) => ({
+    category,
+    total: totalsByCategory[category],
+  }));
+
   if (wishListState.length === 0) {
     return (
-      <div className="max-w-7xl mx-auto p-6">
+      <div>
         <div className="flex flex-col items-center justify-center py-20">
           <Heart size={80} className="text-gray-300 mb-4" />
           <h2 className="text-2xl font-semibold text-gray-700 mb-2">
@@ -46,11 +70,11 @@ const WishList = () => {
     );
   } else {
     return (
-      <div className="max-w-7xl mx-auto p-6">
+      <div>
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-slate-900">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
             My Wishlist
-            <span className="text-lg text-gray-500 ml-2">
+            <span className="hidden md:flex text-lg text-gray-500 ml-2">
               ({wishListState.length}
               {wishListState.length === 1 ? "item" : "items"})
             </span>
@@ -113,6 +137,30 @@ const WishList = () => {
             </div>
           ))}
         </div>
+
+        {/* chart */}
+        {chartData.length > 0 && (
+          <div className="my-10">
+            <div
+              className="bg-base-100 rounded-2xl h-64"
+              style={{ minWidth: 0 }}
+            >
+              <ResponsiveContainer width="100%" height={240}>
+                <BarChart
+                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                  data={chartData}
+                >
+                  <CartesianGrid strokeDasharray="5 5" />
+                  <XAxis dataKey="category" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="total" fill="#82ca9d" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
