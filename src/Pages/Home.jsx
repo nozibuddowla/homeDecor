@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 import ProductCard from "../Components/ProductCard";
 import useProducts from "../hooks/useProducts";
+import SkeletonLoader from "../Components/SkeletonLoader";
 
 const Home = () => {
   const [data, setData] = useState();
@@ -16,11 +17,16 @@ const Home = () => {
           See All Products
         </Link>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {featuredProducts.map((product) => (
-          <ProductCard key={product.id} product={product}></ProductCard>
-        ))}
-      </div>
+
+      {loading ? (
+        <SkeletonLoader />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {featuredProducts.map((product) => (
+            <ProductCard key={product.id} product={product}></ProductCard>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

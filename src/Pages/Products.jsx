@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import useProducts from "../hooks/useProducts";
 import ProductCard from "../Components/ProductCard";
+import SkeletonLoader from "../Components/SkeletonLoader";
 
 const Products = () => {
   const { products, loading, error } = useProducts();
@@ -47,17 +48,20 @@ const Products = () => {
           />
         </label>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {searchProducts.length === 0 ? (
-          <div className="card bg-base-100 flex justify-center items-center p-5 shadow-sm hover:scale-105 transition ease-out">
-            <p>Product not found</p>
-          </div>
-        ) : (
-          searchProducts.map((product) => (
-            <ProductCard key={product.id} product={product}></ProductCard>
-          ))
-        )}
-      </div>
+
+      {loading ? (
+        <SkeletonLoader count={16} />
+      ) : searchProducts.length === 0 ? (
+        <div className="card bg-base-100 flex justify-center items-center p-5 shadow-sm hover:scale-105 transition ease-out">
+          <p>Product not found</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {searchProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
