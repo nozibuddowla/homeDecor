@@ -11,17 +11,11 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { loadWishList, removeFromWishList } from "../utils/localStorage";
 
 const WishList = () => {
-  const [wishListState, setWishListState] = useState([]);
+  const [wishListState, setWishListState] = useState(() => loadWishList());
   const [sortOrder, setSortOrder] = useState("none");
-  useEffect(() => {
-    const existingWishList = JSON.parse(localStorage.getItem("wishList")) || [];
-
-    if (wishListState) {
-      setWishListState(existingWishList);
-    }
-  }, []);
 
   const sortedItem = (() => {
     if (sortOrder === "price-asc") {
@@ -34,11 +28,10 @@ const WishList = () => {
   })();
 
   const handleRemoveFromWishlist = (productId) => {
-    const updatedWishList = wishListState.filter(
-      (item) => item.id !== productId
-    );
-    setWishListState(updatedWishList);
-    localStorage.setItem("wishList", JSON.stringify(updatedWishList));
+    // remove from localStorage
+    removeFromWishList(productId);
+    // for UI instant update
+    setWishListState((prev) => prev.filter((p) => p.id !== productId));
   };
 
   // generate chart data
@@ -71,17 +64,17 @@ const WishList = () => {
   } else {
     return (
       <div>
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
-            My Wishlist
-            <span className="hidden md:flex text-lg text-gray-500 ml-2">
-              ({wishListState.length}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4 sm:gap-0">
+          <h1 className=" flex flex-wrap items-center text-xl sm:text-2xl md:text-3xl font-bold text-slate-900">
+            <span>My Wishlist </span>
+            <span className="text-lg text-gray-500 ml-2">
+              ({wishListState.length}{" "}
               {wishListState.length === 1 ? "item" : "items"})
             </span>
           </h1>
-          <label className="form-control w-full max-w-xs">
+          <div className="w-full sm:w-auto">
             <select
-              className="select"
+              className="select w-full sm:w-48"
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
             >
@@ -89,7 +82,7 @@ const WishList = () => {
               <option value="price-asc">Low -&gt; High</option>
               <option value="price-desc">High -&gt; Low</option>
             </select>
-          </label>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

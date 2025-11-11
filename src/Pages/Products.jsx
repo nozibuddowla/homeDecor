@@ -16,7 +16,8 @@ const Products = () => {
     <div>
       <div className="flex justify-between items-center my-5">
         <h1 className="text-3xl font-semibold">
-          All Products
+          <span> All Products </span>
+
           <span className="text-sm text-gray-500">
             ({searchProducts.length}) products found
           </span>

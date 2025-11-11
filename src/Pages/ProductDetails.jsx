@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useParams } from "react-router";
 import useProducts from "../hooks/useProducts";
 import { ChevronLeft, RulerDimensionLine, Star } from "lucide-react";
+import { updateList } from "../utils/localStorage";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -41,24 +42,6 @@ const ProductDetails = () => {
   } = product;
 
   if (!product) return null;
-
-  const handleAddToWishList = () => {
-    const existingWishList = JSON.parse(localStorage.getItem("wishList"));
-    let updatedWishList = [];
-    if (existingWishList) {
-      const isDuplicate = existingWishList.some((p) => p.id === product.id);
-
-      if (isDuplicate) {
-        return alert("Product already added in your wishlist!");
-      }
-
-      updatedWishList = [...existingWishList, product];
-    } else {
-      updatedWishList.push(product);
-    }
-
-    localStorage.setItem("wishList", JSON.stringify(updatedWishList));
-  };
 
   return (
     <div>
@@ -128,7 +111,7 @@ const ProductDetails = () => {
               </div>
             </div>
             <div>
-              <button onClick={handleAddToWishList} className="btn btn-outline">
+              <button onClick={() => updateList(product)} className="btn btn-outline">
                 Add to WishList
               </button>
             </div>
